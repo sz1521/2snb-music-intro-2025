@@ -5,6 +5,7 @@ import Scroller from "./components/Scroller";
 import VectorBox from "./components/VectorBox";
 import "./App.css";
 import "./components/Scroller.css";
+import audioFile from "./assets/2snb-intro2025.mp3"; // Vite handles this path correctly
 
 // --- Aspect Ratio Constant ---
 const TARGET_RATIO = 4 / 3;
@@ -213,7 +214,7 @@ const App: React.FC = () => {
       <audio
         ref={audioRef}
         id="audio-player"
-        src="/src/assets/2snb-intro2025.mp3"
+        src={audioFile} // Use the variable resolved by Vite
         loop
       >
         Your browser does not support the audio element.
