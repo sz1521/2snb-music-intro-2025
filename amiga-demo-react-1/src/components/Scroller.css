@@ -1,0 +1,100 @@
+.scroller-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 15;
+  padding-top: 4vh; /* Use vh units */
+  padding-bottom: 1vh; /* Use vh units */
+  white-space: nowrap;
+  box-sizing: border-box;
+  font-weight: bold;
+  font-size: 3vw; /* Use vw units */
+}
+
+.scroller-jump-wrapper {
+  width: 100%;
+  position: relative; /* Needed for absolute positioning of .scroller-text */
+  /* Height needs to accommodate the text line */
+  min-height: 5vh; /* Adjust based on font size and padding */
+  /* Apply vertical jump animation */
+  animation: amiga-jump 2s ease-in-out infinite alternate; /* Keep duration or adjust if needed */
+  will-change: transform;
+  transform: translateZ(0); /* Promote layer */
+}
+
+.scroller-text {
+  position: absolute; /* Position absolutely to control start */
+  left: 100%; /* Start element's left edge at container's right edge */
+  white-space: nowrap; /* Prevent text wrapping */
+
+  /* Gradient text effect */
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(
+    to bottom,
+    #a52a2a 0%,
+    #a52a2a 20%,
+    #cd853f 20%,
+    #cd853f 40%,
+    #d2691e 40%,
+    #d2691e 60%,
+    #b8860b 60%,
+    #b8860b 80%,
+    #a52a2a 80%,
+    #a52a2a 100%
+  );
+  background-size: auto 200%;
+  background-repeat: repeat-x;
+
+  /* Apply horizontal scroll (constant speed approx) AND vertical copper effect */
+  /* Halve the duration to double the speed */
+  animation: scroll-left-const-speed 60s linear infinite,
+    /* Halved duration from 100s */ copper-scroll 2s linear infinite alternate;
+  will-change: transform, background-position;
+  transform: translateZ(0); /* Promote layer */
+}
+
+/* The actual text content */
+.scroller-text span {
+  white-space: pre; /* Preserve whitespace */
+}
+
+/* --- Keyframes --- */
+
+/* Horizontal Scroll (translateX) - Constant Speed Approximation */
+@keyframes scroll-left-const-speed {
+  0% {
+    /* Start text positioned at left: 100%, translate 0 */
+    transform: translateX(0%);
+  }
+  100% {
+    /* Keep the distance, speed is controlled by duration */
+    transform: translateX(-15000px);
+  }
+}
+
+/* Vertical Jump (translateY) - Applied to .scroller-jump-wrapper */
+@keyframes amiga-jump {
+  0% {
+    transform: translateY(0vh);
+  }
+  50% {
+    /* Double the jump height */
+    transform: translateY(-12vh); /* Doubled from -3vh */
+  }
+  100% {
+    transform: translateY(0vh);
+  }
+}
+
+/* Vertical Gradient Scroll (background-position-y) - Applied to .scroller-text */
+@keyframes copper-scroll {
+  0% {
+    background-position-y: 0%;
+  }
+  100% {
+    background-position-y: 100%;
+  }
+}

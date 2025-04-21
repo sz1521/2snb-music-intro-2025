@@ -1,0 +1,108 @@
+/* --- Container --- */
+.logo-container {
+  padding: 20px; /* Optional padding around the mover */
+  box-sizing: border-box;
+  z-index: 10; /* Ensure it's above the background */
+
+  /* Positioning */
+  position: absolute;
+  left: 50%;
+  top: 50%; /* Increased from 45% */
+  transform: translate(-50%, -50%);
+
+  /* Initial state (before animation) */
+  opacity: 0;
+  will-change: top, transform, opacity; /* Optimize animations */
+}
+
+/* --- Animation Trigger --- */
+/* Animations applied only when 'animate' class is present */
+.logo-container.animate {
+  /* name duration timing-function delay iteration-count fill-mode */
+  animation:
+    /* Fade in */ fade-in-logo 8s ease-out 1s 1 forwards,
+    /* Move up */ move-logo-up 3s ease-out 10s 1 forwards;
+}
+
+/* --- Horizontal Movement Wrapper --- */
+.logo-mover {
+  /* name duration timing-function delay iteration-count direction fill-mode */
+  animation: move-logo-side 4s ease-in-out infinite alternate;
+  will-change: transform; /* Optimize animation */
+}
+
+/* --- ASCII Logo Styling --- */
+.logo-ascii {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.4vw; /* Responsive font size */
+  line-height: 1.1;
+  color: #00ffff; /* Base cyan color */
+
+  /* --- Background --- */
+  background-color: rgba(0, 0, 0, 0.5);
+
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+  white-space: pre; /* Preserve whitespace in the logo string */
+
+  /* Extruded 3D Text Effect (using vw for responsiveness) */
+
+  /* Gradient Fade Mask (Bottom Fade) */
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    /* Opaque top part */ transparent 100% /* Fade to transparent */
+  );
+  mask-size: 100%;
+  mask-repeat: no-repeat;
+  /* Vendor prefix for compatibility */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    transparent 100%
+  );
+  -webkit-mask-size: 100%;
+  -webkit-mask-repeat: no-repeat;
+
+  /* Add will-change for text-shadow since JS is animating it */
+  will-change: text-shadow;
+}
+
+/* --- Keyframes --- */
+
+/* Vertical Movement (applied to .logo-container.animate) */
+@keyframes move-logo-up {
+  0% {
+    top: 50%; /* Increased from 45% */
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    top: 10vh; /* Increased from 5vh */
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Fade In (applied to .logo-container.animate) */
+@keyframes fade-in-logo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1; /* Fully opaque */
+  }
+}
+
+/* Horizontal Movement (applied to .logo-mover) */
+@keyframes move-logo-side {
+  0% {
+    transform: translateX(
+      -20vw
+    ); /* Left position (relative to viewport width) */
+  }
+  100% {
+    transform: translateX(
+      20vw
+    ); /* Right position (relative to viewport width) */
+  }
+}

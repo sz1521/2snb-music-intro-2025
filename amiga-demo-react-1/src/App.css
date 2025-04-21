@@ -1,0 +1,76 @@
+/* --- Base Styles --- */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars on the body */
+  font-family: "Amiga Topaz", "Courier New", monospace;
+  background-color: black;
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Ensure body takes full viewport height */
+}
+
+/* --- App Container --- */
+.app {
+  /* --- Dynamically set width/height via JS --- */
+  position: relative; /* Keep relative for children */
+  overflow: hidden;
+  background-color: black;
+  margin: 0 auto; /* Keep for centering within body flex */
+
+  /* --- Rendering Hint --- */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Utility to hide cursor when music is playing */
+.app.hide-cursor {
+  cursor: none;
+}
+
+/* --- Custom Font --- */
+@font-face {
+  font-family: "Amiga Topaz";
+  /* Ensure the path is correct relative to the CSS file or public folder */
+  src: url("./assets/amiga-topaz.otf") format("opentype"); /* Corrected format */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* --- Loading / Interaction Screen --- */
+.loading-screen {
+  position: fixed; /* Cover the whole viewport */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Ensure it's on top */
+  cursor: pointer; /* Indicate it's clickable when needed */
+  color: white;
+  font-size: 5vh; /* Font size relative to viewport height */
+  text-align: center;
+  font-family: "Amiga Topaz", "Courier New", monospace; /* Apply font */
+}
+
+.loading-text {
+  cursor: default; /* Ensure loading text doesn't show pointer */
+}
+
+.play-music-text {
+  /* transform: translate(-50%, -50%); */
+  font-size: inherit; /* Inherit size from .loading-screen */
+  color: #fff;
+  /* z-index: 101; */ /* Not needed if it's a direct child */
+  font-family: inherit; /* Inherit font */
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  transition: color 0.2s ease;
+}
