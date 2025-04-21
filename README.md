@@ -5,7 +5,7 @@ This project is a React application inspired by the classic Amiga intros. It fea
 ## Project Structure
 
 ```
-music-intro-2025
+2snb-music-intro-2025
 ├── public
 │   └── audio          # Directory for audio files (e.g., MP3s)
 ├── src
@@ -31,7 +31,7 @@ music-intro-2025
 
    ```
    git clone <repository-url>
-   cd music-intro-2025
+   cd 2snb-music-intro-2025
    ```
 
 2. **Install dependencies:**
@@ -62,4 +62,4 @@ Feel free to submit issues or pull requests to improve the project.
 
 ## License
 
-(c) 2025, 2 Space & Beyond.
+(c) 2025, sz1 / 2 Space & Beyond.
