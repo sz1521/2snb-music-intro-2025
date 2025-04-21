@@ -1,13 +1,12 @@
 /* --- Container --- */
 .logo-container {
-  padding: 20px; /* Optional padding around the mover */
   box-sizing: border-box;
   z-index: 10; /* Ensure it's above the background */
 
   /* Positioning */
   position: absolute;
   left: 50%;
-  top: 50%; /* Increased from 45% */
+  top: 50%;
   transform: translate(-50%, -50%);
 
   /* Initial state (before animation) */

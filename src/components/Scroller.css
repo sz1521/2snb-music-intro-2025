@@ -1,11 +1,9 @@
 .scroller-container {
   position: absolute;
-  bottom: 0;
+  bottom: 5vh; /* Increased from 0 to move it up */
   left: 0;
   width: 100%;
   z-index: 15;
-  padding-top: 4vh; /* Use vh units */
-  padding-bottom: 1vh; /* Use vh units */
   white-space: nowrap;
   box-sizing: border-box;
   font-weight: bold;
