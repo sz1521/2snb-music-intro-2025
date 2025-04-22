@@ -48,8 +48,6 @@
   text-align: left;
   white-space: pre; /* Preserve whitespace in the logo string */
 
-  /* Extruded 3D Text Effect (using vw for responsiveness) */
-
   /* Gradient Fade Mask (Bottom Fade) */
   mask-image: linear-gradient(
     to bottom,
@@ -67,8 +65,16 @@
   -webkit-mask-size: 100%;
   -webkit-mask-repeat: no-repeat;
 
-  /* Add will-change for text-shadow since JS is animating it */
-  will-change: text-shadow;
+  /* Apply BOTH animations: */
+  /* 1. Initial stretch (once) */
+  /* 2. Repeating stretch (infinite, starts after initial) */
+  /* name duration timing-function delay iteration-count fill-mode */
+  animation: initial-stretch 8s ease-out 1s 1 forwards,
+    /* Keep 16s total duration, but remove alternate */ stretch-letters 16s
+      ease-in-out 9s infinite; /* Removed alternate */
+
+  /* Optimize animations */
+  will-change: text-shadow, letter-spacing;
 }
 
 /* --- Keyframes --- */
@@ -106,5 +112,35 @@
     transform: translateX(
       20vw
     ); /* Right position (relative to viewport width) */
+  }
+}
+
+/* Keyframes for initial large letter spacing */
+@keyframes initial-stretch {
+  0% {
+    letter-spacing: 20vw; /* Start large - adjust value */
+  }
+  100% {
+    letter-spacing: normal; /* End at normal spacing */
+  }
+}
+
+/* Keyframes for repeating letter spacing (slower transition, long hold) */
+@keyframes stretch-letters {
+  /* Hold normal */
+  0%,
+  42% {
+    /* Start transition later (was 48%) */
+    letter-spacing: normal;
+  }
+  /* Stretch out over 8% of duration (was 2%) */
+  50% {
+    letter-spacing: 0.4vw; /* Max stretch */
+  }
+  /* Return to normal over 8% of duration (was 2%) */
+  58%, /* End transition later (was 52%) */
+  100% {
+    /* Hold normal */
+    letter-spacing: normal;
   }
 }
