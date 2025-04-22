@@ -4,12 +4,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  /* Size using vmin units for proportional scaling */
-  width: 25vmin; /* Changed from vh to vmin */
-  height: 25vmin; /* Changed from vh to vmin */
+  /* Restore original base size (double the current 12.5vmin) */
+  width: 25vmin; /* Was 12.5vmin */
+  height: 25vmin; /* Was 12.5vmin */
   opacity: 0; /* Start invisible */
 
-  /* Apply ONLY opacity animation to the container */
   animation: zoom-in-box 4s ease-out 0s 1 forwards;
   will-change: opacity;
 }
@@ -17,9 +16,8 @@
 .vector-box-scene {
   width: 100%;
   height: 100%;
-  perspective: 80vmin; /* Optional: Adjust perspective relative to viewport */
+  perspective: 80vmin;
   transform-style: preserve-3d;
-  /* Scaling is now applied here via inline style from React */
   will-change: transform;
 }
 
@@ -28,70 +26,60 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  /* Adjust Z translation based on vmin size */
-  transform: translateZ(-10vmin); /* Changed from vh to vmin */
+  /* Restore original Z translation (double the current -5vmin) */
+  transform: translateZ(-10vmin); /* Was -5vmin */
   animation: spin-vector-box 10s linear infinite;
   will-change: transform;
 }
 
 .vector-box-face {
   position: absolute;
-  /* Size using percentages relative to cube (which is sized by vmin) */
-  width: 80%; /* Adjust % */
-  height: 80%; /* Adjust % */
-  /* Position using percentages */
-  left: 10%; /* (100% - 80%) / 2 */
-  top: 10%; /* (100% - 80%) / 2 */
-  border: 3px solid #ff00ff; /* Keep border fixed */
+  width: 80%;
+  height: 80%;
+  left: 10%;
+  top: 10%;
+  border: 3px solid #ff00ff; /* Keep border fixed px */
   box-sizing: border-box;
-
-  /* --- Background Image --- */
   background-image: url("/src/assets/logo.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-
-  /* --- Opacity --- */
   opacity: 0.7;
-
-  /* Apply color change animation to border */
   animation: change-vector-color 5s linear infinite alternate;
   will-change: border-color, opacity;
 }
 
-/* --- Face Positions --- */
-/* Adjust translateZ based on half the face size (relative to vmin) */
-/* Use a vmin value roughly half of the cube's translateZ */
+/* Restore original face translation distance (double the current 5vmin) */
 .vector-box-face.front {
   transform: rotateY(0deg) translateZ(10vmin);
-} /* Changed from vh to vmin */
+} /* Was 5vmin */
 .vector-box-face.back {
   transform: rotateY(180deg) translateZ(10vmin);
-} /* Changed from vh to vmin */
+} /* Was 5vmin */
 .vector-box-face.right {
   transform: rotateY(90deg) translateZ(10vmin);
-} /* Changed from vh to vmin */
+} /* Was 5vmin */
 .vector-box-face.left {
   transform: rotateY(-90deg) translateZ(10vmin);
-} /* Changed from vh to vmin */
+} /* Was 5vmin */
 .vector-box-face.top {
   transform: rotateX(90deg) translateZ(10vmin);
-} /* Changed from vh to vmin */
+} /* Was 5vmin */
 .vector-box-face.bottom {
   transform: rotateX(-90deg) translateZ(10vmin);
-} /* Changed from vh to vmin */
+} /* Was 5vmin */
 
 /* --- Keyframes --- */
 
-/* Keyframes for the spinning animation (applied to cube) */
+/* Restore original translateZ in keyframes (double the current -5vmin) */
 @keyframes spin-vector-box {
   0% {
-    transform: translateZ(-10vmin) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-  } /* Changed from vh to vmin */
+    transform: translateZ(-10vmin) rotateX(0deg) rotateY(0deg) rotateZ(0deg); /* Was -5vmin */
+  }
   100% {
     transform: translateZ(-10vmin) rotateX(360deg) rotateY(720deg)
-      rotateZ(360deg);
-  } /* Changed from vh to vmin */
+      rotateZ(360deg); /* Was -5vmin */
+  }
 }
 
 /* Keyframes for the zoom-in animation (applied to container) - ONLY OPACITY */
