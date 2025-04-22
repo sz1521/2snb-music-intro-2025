@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "./VectorBox.css";
 
 const VectorBox: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Start scale at 0 for the initial zoom-in effect
   const [currentScale, setCurrentScale] = useState(0);
   const targetScaleRef = useRef(1);
@@ -207,8 +209,36 @@ const VectorBox: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const dpr = window.devicePixelRatio || 1;
+    const container = containerRef.current;
+
+    if (container) {
+      // Define base values (matching CSS :root)
+      const baseSize = 25; // vmin
+      const baseDepth = 10; // vmin
+
+      // --- Scaling Logic ---
+      // If DPR is low (e.g., 1), increase the effective size/depth
+      // We observed it was ~2x smaller on 1x DPR compared to 2x DPR.
+      // So, if DPR is close to 1, multiply by ~2.
+      // Adjust the 'scalingFactor' based on testing.
+      const scalingFactor = dpr < 1.5 ? 2 : 1; // Apply 2x factor if DPR is less than 1.5
+
+      const scaledSize = baseSize * scalingFactor;
+      const scaledDepth = baseDepth * scalingFactor;
+
+      // Apply the calculated values as CSS variables to the component's root
+      container.style.setProperty("--cube-base-size", `${scaledSize}vmin`);
+      container.style.setProperty("--cube-base-depth", `${scaledDepth}vmin`);
+      container.style.setProperty("--cube-face-depth", `${scaledDepth}vmin`); // Keep face depth consistent
+    }
+
+    // No cleanup needed, runs once on mount
+  }, []); // Empty dependency array ensures this runs only once
+
   return (
-    <div className="vector-box-container">
+    <div className="vector-box-container" ref={containerRef}>
       <div
         className="vector-box-scene"
         style={{

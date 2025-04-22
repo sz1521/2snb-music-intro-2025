@@ -1,12 +1,19 @@
+:root {
+  /* Define base values (what looks good on macOS 2x) */
+  --cube-base-size: 25vmin;
+  --cube-base-depth: 10vmin;
+  --cube-face-depth: 10vmin; /* Should match base-depth */
+}
+
 .vector-box-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  /* Restore original base size (double the current 12.5vmin) */
-  width: 25vmin; /* Was 12.5vmin */
-  height: 25vmin; /* Was 12.5vmin */
+  /* Use CSS variable for size */
+  width: var(--cube-base-size);
+  height: var(--cube-base-size);
   opacity: 0; /* Start invisible */
 
   animation: zoom-in-box 4s ease-out 0s 1 forwards;
@@ -16,6 +23,7 @@
 .vector-box-scene {
   width: 100%;
   height: 100%;
+  /* Perspective might still need tweaking, but let's focus on size first */
   perspective: 80vmin;
   transform-style: preserve-3d;
   will-change: transform;
@@ -26,8 +34,8 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  /* Restore original Z translation (double the current -5vmin) */
-  transform: translateZ(-10vmin); /* Was -5vmin */
+  /* Use CSS variable for depth */
+  transform: translateZ(calc(var(--cube-base-depth) * -1));
   animation: spin-vector-box 10s linear infinite;
   will-change: transform;
 }
@@ -38,7 +46,7 @@
   height: 80%;
   left: 10%;
   top: 10%;
-  border: 3px solid #ff00ff; /* Keep border fixed px */
+  border: 3px solid #ff00ff;
   box-sizing: border-box;
   background-image: url("/src/assets/logo.jpg");
   background-size: cover;
@@ -49,36 +57,37 @@
   will-change: border-color, opacity;
 }
 
-/* Restore original face translation distance (double the current 5vmin) */
+/* Use CSS variable for face depth */
 .vector-box-face.front {
-  transform: rotateY(0deg) translateZ(10vmin);
-} /* Was 5vmin */
+  transform: rotateY(0deg) translateZ(var(--cube-face-depth));
+}
 .vector-box-face.back {
-  transform: rotateY(180deg) translateZ(10vmin);
-} /* Was 5vmin */
+  transform: rotateY(180deg) translateZ(var(--cube-face-depth));
+}
 .vector-box-face.right {
-  transform: rotateY(90deg) translateZ(10vmin);
-} /* Was 5vmin */
+  transform: rotateY(90deg) translateZ(var(--cube-face-depth));
+}
 .vector-box-face.left {
-  transform: rotateY(-90deg) translateZ(10vmin);
-} /* Was 5vmin */
+  transform: rotateY(-90deg) translateZ(var(--cube-face-depth));
+}
 .vector-box-face.top {
-  transform: rotateX(90deg) translateZ(10vmin);
-} /* Was 5vmin */
+  transform: rotateX(90deg) translateZ(var(--cube-face-depth));
+}
 .vector-box-face.bottom {
-  transform: rotateX(-90deg) translateZ(10vmin);
-} /* Was 5vmin */
+  transform: rotateX(-90deg) translateZ(var(--cube-face-depth));
+}
 
 /* --- Keyframes --- */
 
-/* Restore original translateZ in keyframes (double the current -5vmin) */
+/* Use CSS variable in keyframes */
 @keyframes spin-vector-box {
   0% {
-    transform: translateZ(-10vmin) rotateX(0deg) rotateY(0deg) rotateZ(0deg); /* Was -5vmin */
+    transform: translateZ(calc(var(--cube-base-depth) * -1)) rotateX(0deg)
+      rotateY(0deg) rotateZ(0deg);
   }
   100% {
-    transform: translateZ(-10vmin) rotateX(360deg) rotateY(720deg)
-      rotateZ(360deg); /* Was -5vmin */
+    transform: translateZ(calc(var(--cube-base-depth) * -1)) rotateX(360deg)
+      rotateY(720deg) rotateZ(360deg);
   }
 }
 
