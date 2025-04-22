@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap");
-
 /* --- Container --- */
 .logo-container {
   box-sizing: border-box;
@@ -34,8 +32,6 @@
 
 /* --- ASCII Logo Styling --- */
 .logo-ascii {
-  font-family: "Roboto Mono", monospace;
-
   font-size: 1.4vw; /* Responsive font size */
   line-height: 1.1;
   color: #00ffff; /* Base cyan color */
