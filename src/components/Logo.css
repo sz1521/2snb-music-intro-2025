@@ -32,6 +32,8 @@
 
 /* --- ASCII Logo Styling --- */
 .logo-ascii {
+  font-family: "Courier New", Courier, monospace;
+
   font-size: 1.4vw; /* Responsive font size */
   line-height: 1.1;
   color: #00ffff; /* Base cyan color */
