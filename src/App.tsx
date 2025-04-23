@@ -219,6 +219,16 @@ const App: React.FC = () => {
       >
         Your browser does not support the audio element.
       </audio>
+
+      {/* SoundCloud Link */}
+      <a
+        href="https://soundcloud.com/2snb"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="soundcloud-link"
+      >
+        soundcloud.com/2snb
+      </a>
     </div>
   );
 };

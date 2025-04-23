@@ -74,3 +74,18 @@ body {
   padding: 10px;
   transition: color 0.2s ease;
 }
+
+.soundcloud-link {
+  position: absolute;
+  top: 2vh;
+  right: 1vw;
+  /* --- Temporary Debug Styles --- */
+  color: rgba(128, 128, 255, 0.5);
+  font-size: 30px; /* Make it huge */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.soundcloud-link:hover {
+  color: rgba(128, 128, 255, 0.8);
+}
