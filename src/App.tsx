@@ -22,6 +22,7 @@ const App: React.FC = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [showScroller, setShowScroller] = useState(false);
   const [isCursorVisible, setIsCursorVisible] = useState(true);
+  const [showSoundCloudLink, setShowSoundCloudLink] = useState(false);
 
   // --- Handlers & Effects ---
 
@@ -178,6 +179,13 @@ const App: React.FC = () => {
     };
   }, [showPlayButton, isMusicPlaying]);
 
+  // Effect for SoundCloud link visibility
+  useEffect(() => {
+    if (isMusicPlaying && showScroller) {
+      setShowSoundCloudLink(true);
+    }
+  }, [isMusicPlaying, showScroller]);
+
   // Click handler for the interaction prompt
   const handlePlayClick = () => {
     startMusic(); // Use the unified start function
@@ -225,7 +233,7 @@ const App: React.FC = () => {
         href="https://soundcloud.com/2snb/tracks"
         target="_blank"
         rel="noopener noreferrer"
-        className="soundcloud-link"
+        className={`soundcloud-link ${showSoundCloudLink ? "visible" : ""}`}
       >
         soundcloud.com/2snb
       </a>

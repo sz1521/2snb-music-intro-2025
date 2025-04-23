@@ -61,15 +61,15 @@
   -webkit-mask-size: 100%;
   -webkit-mask-repeat: no-repeat;
 
-  /* Apply THREE animations: Keep overall timings */
+  /* Apply THREE animations */
   /* name duration timing-function delay iteration-count fill-mode */
   animation:
     /* Initial stretch runs from 1s to 9s */ initial-stretch 8s
       ease-out 1s 1 forwards,
     /* Stretch during move runs from 10s to 15s */ stretch-during-move 5s
       ease-in-out 9s 1 forwards,
-    /* Changed duration to 5s */ /* Repeating stretch starts at 15s */
-      stretch-letters 16s ease-in-out 15s infinite; /* Changed delay to 15s */
+    /* Repeating stretch starts at 15s */ stretch-letters 16s ease-in-out 14s
+      infinite;
 
   /* Optimize animations */
   will-change: text-shadow, letter-spacing;
@@ -113,7 +113,7 @@
   }
 }
 
-/* Keyframes for initial large letter spacing - Restore larger initial spacing */
+/* Keyframes for initial large letter spacing */
 @keyframes initial-stretch {
   0% {
     letter-spacing: 10vw;
@@ -123,40 +123,31 @@
   }
 }
 
-/* Keyframes for stretching during the move-up - Slower transition over 5s */
+/* Keyframes for stretching during the move-up */
 @keyframes stretch-during-move {
   0%,
   20% {
-    /* Hold normal for first 20% of the 5s */
     letter-spacing: normal;
   }
   80% {
-    /* Stretch out/back between 20% and 80% */
     letter-spacing: 1vw; /* Max stretch */
   }
   100% {
-    /* Ensure it ends at normal */
     letter-spacing: normal;
   }
 }
 
-/* Keyframes for repeating letter spacing - Slower transition */
+/* Keyframes for repeating letter spacing */
 @keyframes stretch-letters {
-  /* Hold normal */
   0%,
   40% {
-    /* Hold normal for 40% of the 16s */
     letter-spacing: normal;
   }
-  /* Stretch out */
   60% {
-    /* Transition out takes 20% */
     letter-spacing: 0.5vw;
   }
-  /* Return to normal */
   80%,
   100% {
-    /* Transition back takes 20%, hold for last 20% */
     letter-spacing: normal;
   }
 }
