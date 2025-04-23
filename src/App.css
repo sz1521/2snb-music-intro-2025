@@ -75,17 +75,33 @@ body {
   transition: color 0.2s ease;
 }
 
+/* --- Keyframes for Link Fade-In --- */
+@keyframes fade-in-link {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.5; /* Fade in to the desired final opacity */
+  }
+}
+
 .soundcloud-link {
   position: absolute;
   top: 2vh;
   right: 1vw;
-  /* --- Temporary Debug Styles --- */
-  color: rgba(128, 128, 255, 0.5);
-  font-size: 30px; /* Make it huge */
+  color: rgba(128, 128, 255, 0.8); /* Final color */
+  font-size: 2vw; /* Use vw units for responsiveness */
   text-decoration: none;
   transition: color 0.3s ease;
+  z-index: 100; /* Ensure it's above other elements if needed */
+
+  /* --- Fade-In Animation --- */
+  opacity: 0; /* Start invisible */
+  /* name duration timing-function delay iteration-count fill-mode */
+  animation: fade-in-link 8s ease-out 10s 1 forwards;
+  will-change: opacity; /* Optimize animation */
 }
 
 .soundcloud-link:hover {
-  color: rgba(128, 128, 255, 0.8);
+  color: rgba(128, 128, 255, 0.9);
 }

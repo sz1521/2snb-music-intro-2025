@@ -222,7 +222,7 @@ const App: React.FC = () => {
 
       {/* SoundCloud Link */}
       <a
-        href="https://soundcloud.com/2snb"
+        href="https://soundcloud.com/2snb/tracks"
         target="_blank"
         rel="noopener noreferrer"
         className="soundcloud-link"
