@@ -61,13 +61,15 @@
   -webkit-mask-size: 100%;
   -webkit-mask-repeat: no-repeat;
 
-  /* Apply BOTH animations: */
-  /* 1. Initial stretch (once) */
-  /* 2. Repeating stretch (infinite, starts after initial) */
+  /* Apply THREE animations: Keep overall timings */
   /* name duration timing-function delay iteration-count fill-mode */
-  animation: initial-stretch 8s ease-out 1s 1 forwards,
-    /* Keep 16s total duration, but remove alternate */ stretch-letters 16s
-      ease-in-out 9s infinite; /* Removed alternate */
+  animation:
+    /* Initial stretch runs from 1s to 9s */ initial-stretch 8s
+      ease-out 1s 1 forwards,
+    /* Stretch during move runs from 10s to 15s */ stretch-during-move 5s
+      ease-in-out 9s 1 forwards,
+    /* Changed duration to 5s */ /* Repeating stretch starts at 15s */
+      stretch-letters 16s ease-in-out 15s infinite; /* Changed delay to 15s */
 
   /* Optimize animations */
   will-change: text-shadow, letter-spacing;
@@ -78,11 +80,11 @@
 /* Vertical Movement (applied to .logo-container.animate) */
 @keyframes move-logo-up {
   0% {
-    top: 50%; /* Increased from 45% */
+    top: 50%;
     transform: translate(-50%, -50%);
   }
   100% {
-    top: 10vh; /* Increased from 5vh */
+    top: 10vh;
     transform: translate(-50%, 0);
   }
 }
@@ -111,32 +113,50 @@
   }
 }
 
-/* Keyframes for initial large letter spacing */
+/* Keyframes for initial large letter spacing - Restore larger initial spacing */
 @keyframes initial-stretch {
   0% {
-    letter-spacing: 20vw; /* Start large - adjust value */
+    letter-spacing: 10vw;
   }
   100% {
     letter-spacing: normal; /* End at normal spacing */
   }
 }
 
-/* Keyframes for repeating letter spacing (slower transition, long hold) */
+/* Keyframes for stretching during the move-up - Slower transition over 5s */
+@keyframes stretch-during-move {
+  0%,
+  20% {
+    /* Hold normal for first 20% of the 5s */
+    letter-spacing: normal;
+  }
+  80% {
+    /* Stretch out/back between 20% and 80% */
+    letter-spacing: 1vw; /* Max stretch */
+  }
+  100% {
+    /* Ensure it ends at normal */
+    letter-spacing: normal;
+  }
+}
+
+/* Keyframes for repeating letter spacing - Slower transition */
 @keyframes stretch-letters {
   /* Hold normal */
   0%,
-  42% {
-    /* Start transition later (was 48%) */
+  40% {
+    /* Hold normal for 40% of the 16s */
     letter-spacing: normal;
   }
-  /* Stretch out over 8% of duration (was 2%) */
-  50% {
-    letter-spacing: 0.4vw; /* Max stretch */
+  /* Stretch out */
+  60% {
+    /* Transition out takes 20% */
+    letter-spacing: 0.5vw;
   }
-  /* Return to normal over 8% of duration (was 2%) */
-  58%, /* End transition later (was 52%) */
+  /* Return to normal */
+  80%,
   100% {
-    /* Hold normal */
+    /* Transition back takes 20%, hold for last 20% */
     letter-spacing: normal;
   }
 }
