@@ -253,6 +253,7 @@ const VectorBox: React.FC = () => {
           <div className="vector-box-face top"></div>
           <div className="vector-box-face bottom"></div>
         </div>
+        <div className="inner-ball"></div>
       </div>
     </div>
   );

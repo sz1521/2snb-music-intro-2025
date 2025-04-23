@@ -77,6 +77,42 @@
   transform: rotateX(-90deg) translateZ(var(--cube-face-depth));
 }
 
+/* --- Inner Ball Styling --- */
+.inner-ball {
+  position: absolute;
+  /* Center the ball within the cube's space */
+  top: 50%;
+  left: 50%;
+  /* Size relative to the cube's base size */
+  width: calc(var(--cube-base-size) * 0.3); /* 30% of cube size */
+  height: calc(var(--cube-base-size) * 0.3);
+  /* Make it round */
+  border-radius: 50%;
+  /* Initial transform to center it and push back slightly */
+  transform: translate(-50%, -50%)
+    translateZ(calc(var(--cube-base-depth) * -0.5));
+
+  /* --- Enhanced Sphere Appearance - BLUE --- */
+  background: radial-gradient(
+    circle at 35% 35%,
+    #ffffff 5%,
+    /* White highlight */ #80c0ff 30%,
+    /* Light blue transition */ #40a0ff 60%,
+    /* Medium blue base */ #004080 100% /* Dark blue edge */
+  );
+  /* Add inset shadow for depth */
+  box-shadow: inset -5px -5px 15px rgba(0, 0, 0, 0.3),
+    /* Inner shadow */ inset 5px 5px 10px rgba(200, 200, 255, 0.3); /* Lighter inner highlight */
+
+  opacity: 0; /* Start invisible */
+  /* Animation: name duration timing-function delay iteration-count */
+  animation: fade-in-ball 2s ease-out 5s 1 forwards,
+    /* Fade in after 5s */ bounce-ball 1.5s ease-in-out 7s infinite alternate; /* Start bouncing after 7s */
+  will-change: transform, opacity;
+  /* Ensure it respects the 3D space */
+  transform-style: preserve-3d;
+}
+
 /* --- Keyframes --- */
 
 /* Use CSS variable in keyframes */
@@ -118,4 +154,28 @@
   100% {
     border-color: #ff00ff;
   } /* Back to Magenta */
+}
+
+/* Keyframes for the ball fade-in */
+@keyframes fade-in-ball {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.8; /* Fade to slightly transparent */
+  }
+}
+
+/* Keyframes for the ball bounce/pulse - Adjust Z if needed */
+@keyframes bounce-ball {
+  0% {
+    /* Apply the base Z translation plus the bounce */
+    transform: translate(-50%, -40%)
+      translateZ(calc(var(--cube-base-depth) * -0.5)) scale(0.9);
+  }
+  100% {
+    /* Apply the base Z translation plus the bounce */
+    transform: translate(-50%, -60%)
+      translateZ(calc(var(--cube-base-depth) * -0.5)) scale(1.1);
+  }
 }
