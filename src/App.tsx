@@ -40,43 +40,34 @@ const App: React.FC = () => {
       let newHeight = 0;
 
       if (viewportRatio > TARGET_RATIO) {
-        // Viewport is wider than 4:3, height is the limiting factor
         newHeight = viewportHeight;
         newWidth = viewportHeight * TARGET_RATIO;
       } else {
-        // Viewport is taller than 4:3 (or exactly 4:3), width is the limiting factor
         newWidth = viewportWidth;
         newHeight = viewportWidth / TARGET_RATIO;
       }
 
-      // Apply the calculated dimensions directly
       appElement.style.width = `${Math.floor(newWidth)}px`;
       appElement.style.height = `${Math.floor(newHeight)}px`;
     };
 
-    // Initial calculation
     handleResize();
-
-    // Add resize listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup listener
     return () => {
       window.removeEventListener("resize", handleResize);
-      // Optionally reset styles on unmount
       if (appElement) {
         appElement.style.width = "";
         appElement.style.height = "";
       }
     };
-  }, []); // Empty dependency array ensures this runs once on mount and cleans up on unmount
+  }, []);
 
   // Starts the timer to show the scroller after a delay
   const startScrollerTimer = (delaySeconds: number) => {
     if (scrollerTimerRef.current) clearTimeout(scrollerTimerRef.current);
     scrollerTimerRef.current = window.setTimeout(() => {
       setShowScroller(true);
-      console.log("Scroller started, telling VectorBox.");
     }, delaySeconds * 1000);
   };
 
@@ -84,17 +75,17 @@ const App: React.FC = () => {
   const startMusic = () => {
     if (!audioRef.current || !showPlayButton) return;
 
-    setShowPlayButton(false); // Hide interaction prompt
+    setShowPlayButton(false);
     audioRef.current
       .play()
       .then(() => {
-        setIsMusicPlaying(true);
-        startScrollerTimer(13); // Start scroller timer (adjust delay as needed)
-        setIsCursorVisible(false); // Initially hide cursor
+        setIsMusicPlaying(true); // Set state to trigger rendering of main components
+        startScrollerTimer(13);
+        setIsCursorVisible(false);
       })
       .catch((error) => {
-        console.error("Error playing audio:", error); // Keep error log
-        setShowPlayButton(true); // Show interaction prompt again on failure
+        console.error("Error playing audio:", error);
+        setShowPlayButton(true);
       });
   };
 
@@ -103,23 +94,21 @@ const App: React.FC = () => {
     const audioEl = audioRef.current;
     if (!audioEl) return;
 
-    audioEl.preload = "auto"; // Hint browser to load audio metadata/data
+    audioEl.preload = "auto";
 
-    // Common success handler for both autoplay and manual start
     const handlePlaySuccess = () => {
       setShowPlayButton(false);
-      setIsMusicPlaying(true);
+      setIsMusicPlaying(true); // Set state to trigger rendering
       startScrollerTimer(13);
       setIsCursorVisible(false);
     };
 
-    // Attempts to play audio, handling potential autoplay restrictions
     const attemptAutoplay = () => {
       setTimeout(() => {
         if (audioEl.paused) {
           const playPromise = audioEl.play();
           if (playPromise !== undefined) {
-            playPromise.then(handlePlaySuccess).catch((error) => {
+            playPromise.then(handlePlaySuccess).catch(() => {
               if (audioEl.paused && !isMusicPlaying) {
                 setShowPlayButton(true);
               }
@@ -129,28 +118,25 @@ const App: React.FC = () => {
             else if (!isMusicPlaying) setShowPlayButton(true);
           }
         } else {
-          handlePlaySuccess();
+          handlePlaySuccess(); // Already playing (e.g., browser resumed session)
         }
-      }, 100); // 100ms delay
+      }, 100);
     };
 
-    attemptAutoplay(); // Try to autoplay on component mount
+    attemptAutoplay();
 
-    // Listener: Retry play if possible when audio is ready
     const handleCanPlay = () => {
       if (!isMusicPlaying && !showPlayButton && audioEl.paused) {
         attemptAutoplay();
       }
     };
 
-    // Listener: Start music on any key press if interaction is needed
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = () => {
       if (showPlayButton && !isMusicPlaying) {
-        startMusic(); // Use the unified start function
+        startMusic();
       }
     };
 
-    // Listener: Show cursor on mouse move, then hide after inactivity
     const handleMouseMove = () => {
       if (isMusicPlaying) {
         setIsCursorVisible(true);
@@ -159,16 +145,14 @@ const App: React.FC = () => {
         }
         cursorHideTimeoutRef.current = window.setTimeout(() => {
           setIsCursorVisible(false);
-        }, 2000); // Hide after 2 seconds
+        }, 2000);
       }
     };
 
-    // --- Add Event Listeners ---
     audioEl.addEventListener("canplaythrough", handleCanPlay);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("mousemove", handleMouseMove);
 
-    // --- Cleanup ---
     return () => {
       audioEl.removeEventListener("canplaythrough", handleCanPlay);
       document.removeEventListener("keydown", handleKeyDown);
@@ -188,7 +172,7 @@ const App: React.FC = () => {
 
   // Click handler for the interaction prompt
   const handlePlayClick = () => {
-    startMusic(); // Use the unified start function
+    startMusic();
   };
 
   // --- Render ---
@@ -199,36 +183,35 @@ const App: React.FC = () => {
         !isCursorVisible && isMusicPlaying ? "hide-cursor" : ""
       }`}
     >
-      <Background />
-      <Logo isMusicPlaying={isMusicPlaying} />
-      <VectorBox />
-      {showScroller && <Scroller />}
-
-      {/* Loading/Interaction Screen */}
-      {!isMusicPlaying && (
+      {/* Conditionally render main components OR loading screen */}
+      {isMusicPlaying ? (
+        <>
+          {/* Pass startAnimations prop set to true (since isMusicPlaying is true here) */}
+          <Background />
+          <Logo />
+          <VectorBox />
+          {showScroller && <Scroller />}
+        </>
+      ) : (
+        // Show loading/interaction screen when music is NOT playing
         <div
           className="loading-screen"
           onClick={showPlayButton ? handlePlayClick : undefined}
         >
           {showPlayButton ? (
-            <div className="play-music-text">Click or press Any Key</div>
+            <div className="play-music-text">Click or press any key</div>
           ) : (
             <p className="loading-text">Loading intro...</p>
           )}
         </div>
       )}
 
-      {/* Audio Element */}
-      <audio
-        ref={audioRef}
-        id="audio-player"
-        src={audioFile} // Use the variable resolved by Vite
-        loop
-      >
+      {/* Audio Element - Always rendered to allow loading and control */}
+      <audio ref={audioRef} id="audio-player" src={audioFile} loop>
         Your browser does not support the audio element.
       </audio>
 
-      {/* SoundCloud Link */}
+      {/* SoundCloud Link - Visibility controlled by state */}
       <a
         href="https://soundcloud.com/2snb/tracks"
         target="_blank"
