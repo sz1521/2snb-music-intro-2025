@@ -191,6 +191,15 @@ const App: React.FC = () => {
           <Logo />
           <VectorBox />
           {showScroller && <Scroller />}
+          {/* SoundCloud Link - Visibility controlled by state */}
+          <a
+            href="https://soundcloud.com/2snb/tracks"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`soundcloud-link ${showSoundCloudLink ? "visible" : ""}`}
+          >
+            soundcloud.com/2snb
+          </a>
         </>
       ) : (
         // Show loading/interaction screen when music is NOT playing
@@ -210,16 +219,6 @@ const App: React.FC = () => {
       <audio ref={audioRef} id="audio-player" src={audioFile} loop>
         Your browser does not support the audio element.
       </audio>
-
-      {/* SoundCloud Link - Visibility controlled by state */}
-      <a
-        href="https://soundcloud.com/2snb/tracks"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`soundcloud-link ${showSoundCloudLink ? "visible" : ""}`}
-      >
-        soundcloud.com/2snb
-      </a>
     </div>
   );
 };
