@@ -5,6 +5,7 @@
   "homepage": "https://sz1521.github.io/2snb-music-intro-2025",
   "scripts": {
     "dev": "vite",
+    "start": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "predeploy": "npm run build",

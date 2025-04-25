@@ -130,7 +130,7 @@
     letter-spacing: normal;
   }
   80% {
-    letter-spacing: 1vw; /* Max stretch */
+    letter-spacing: 0.5vw;
   }
   100% {
     letter-spacing: normal;
