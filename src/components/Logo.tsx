@@ -19,8 +19,11 @@ const Logo: React.FC = () => {
   const asciiRef = useRef<HTMLPreElement>(null);
   const animationFrameIdRef = useRef<number | null>(null);
 
+  const androidCheck = /Android/i.test(navigator.userAgent);
+  const windowsheck = /windows/i.test(navigator.userAgent);
+
   useEffect(() => {
-    const androidCheck = /Android/i.test(navigator.userAgent);
+
     setIsAndroid(androidCheck);
 
     if (androidCheck) {
@@ -130,7 +133,7 @@ const Logo: React.FC = () => {
   const preStyle: React.CSSProperties = {
     whiteSpace: "pre",
     margin: 0,
-    lineHeight: "1.1em",
+    lineHeight: windowsheck ? "1.25em" : "1.1em",
     letterSpacing: "normal",
     display: "block",
     color: "#00cccc",
