@@ -53,7 +53,7 @@ body {
   z-index: 100; /* Ensure it's on top */
   cursor: pointer; /* Indicate it's clickable when needed */
   color: white;
-  font-size: 5vh; /* Font size relative to viewport height */
+  font-size: 4vh; /* Font size relative to viewport height */
   text-align: center;
   font-family: "Amiga Topaz", "Courier New", monospace; /* Apply font */
 }

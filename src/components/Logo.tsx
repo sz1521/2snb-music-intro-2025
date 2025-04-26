@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from "react"; // Import useRef and useEffect
+import React, { useRef, useEffect, useState } from "react";
 import "./Logo.css";
 
 const Logo: React.FC = () => {
-  const asciiArt = `
+  const originalAsciiArt = `
 ██████      ███████ ██████   █████   ██████ ███████        ██        ██████  ███████ ██    ██  ██████  ███    ██ ██████     
      ██     ██      ██   ██ ██   ██ ██      ██             ██        ██   ██ ██       ██  ██  ██    ██ ████   ██ ██   ██    
  █████      ███████ ██████  ███████ ██      █████       ████████     ██████  █████     ████   ██    ██ ██ ██  ██ ██   ██    
@@ -10,90 +10,142 @@ const Logo: React.FC = () => {
 ███████     ███████ ██      ██   ██  ██████ ███████     ██████       ██████  ███████    ██     ██████  ██   ████ ██████  ██
 `;
 
-  // Refs for the elements
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [displayContent, setDisplayContent] = useState<React.ReactNode>(
+    originalAsciiArt.trim()
+  );
+
   const moverRef = useRef<HTMLDivElement>(null);
   const asciiRef = useRef<HTMLPreElement>(null);
   const animationFrameIdRef = useRef<number | null>(null);
 
-  // Effect to handle the dynamic shadow animation
-  const moverElement = moverRef.current;
-  const asciiElement = asciiRef.current;
+  useEffect(() => {
+    const androidCheck = /Android/i.test(navigator.userAgent);
+    setIsAndroid(androidCheck);
 
-  // Only run the animation if music is playing and elements exist
-  if (moverElement && asciiElement) {
-    const animateShadow = () => {
-      // Get the computed transform style
-      const computedStyle = window.getComputedStyle(moverElement);
-      const transform = computedStyle.transform;
+    if (androidCheck) {
+      const lines = originalAsciiArt.trim().split("\n");
+      const processedContent = lines.map((line, lineIndex) => (
+        <React.Fragment key={`line-${lineIndex}`}>
+          {line.split("").map((char, charIndex) =>
+            char === " " ? (
+              <span
+                key={`char-${lineIndex}-${charIndex}`}
+                style={{ color: "transparent" }}
+              >
+                █
+              </span>
+            ) : (
+              char
+            )
+          )}
+          {lineIndex < lines.length - 1 ? "\n" : ""}
+        </React.Fragment>
+      ));
+      setDisplayContent(processedContent);
+    } else {
+      setDisplayContent(originalAsciiArt.trim());
+    }
+  }, []);
 
-      let translateX = 0;
-      // Parse the translateX value from the matrix
-      if (transform && transform !== "none") {
-        const matrix = transform.match(/^matrix\((.+)\)$/);
-        if (matrix && matrix[1]) {
-          const matrixValues = matrix[1].split(", ");
-          // The translateX value is typically the 5th value (index 4) in a 2D matrix
-          translateX = parseFloat(matrixValues[4]);
+  useEffect(() => {
+    const currentMoverElement = moverRef.current;
+    const currentAsciiElement = asciiRef.current;
+
+    if (currentMoverElement && currentAsciiElement) {
+      const animateEffect = () => {
+        const computedStyle = window.getComputedStyle(currentMoverElement);
+        const transform = computedStyle.transform;
+        let translateX = 0;
+        if (transform && transform !== "none") {
+          const matrix = transform.match(/^matrix\((.+)\)$/);
+          if (matrix && matrix[1]) {
+            const matrixValues = matrix[1].split(", ");
+            translateX = parseFloat(matrixValues[4]);
+          }
         }
-      }
 
-      // --- Calculate shadow based on translateX ---
-      // Normalize translateX (e.g., map it to a range like -1 to 1)
-      // Assuming the animation moves between -20vw and 20vw
-      const maxTranslate = window.innerWidth * 0.2; // 20vw
-      const normalizedX = Math.max(-1, Math.min(1, translateX / maxTranslate));
+        const maxTranslate = window.innerWidth * 0.2;
+        const normalizedX = Math.max(
+          -1,
+          Math.min(1, translateX / maxTranslate)
+        );
+        const maxOffset = 1.0; // Max offset in vw
 
-      // Define max shadow offset and number of layers
-      const maxOffset = 1.0; // Max offset in vw units
-      const layers = 10;
-      let shadowString = "";
+        if (isAndroid) {
+          // Android: Use single drop-shadow filter
+          const androidLayerProgress = 0.5; // Use a mid-point for a single shadow
+          const offsetX = -normalizedX * maxOffset * androidLayerProgress;
+          const offsetY = maxOffset * androidLayerProgress;
+          // Use a darker, less saturated color for the single shadow
+          const colorIntensity = Math.round(100 - 100 * androidLayerProgress); // Darker base
+          const colorHex = colorIntensity.toString(16).padStart(2, "0");
+          const shadowColor = `#00${colorHex}${colorHex}`; // Dark cyan/black shadow
 
-      for (let i = 1; i <= layers; i++) {
-        const layerProgress = i / layers;
-        // Shadow moves opposite to the element's movement
-        const offsetX = -normalizedX * maxOffset * layerProgress;
-        // Keep vertical offset consistent or make it dynamic too if desired
-        const offsetY = maxOffset * layerProgress;
-        // Darken the color for deeper layers
-        const colorIntensity = Math.round(204 - 204 * layerProgress); // 0xCC down to 0x00
-        const colorHex = colorIntensity.toString(16).padStart(2, "0");
-        const shadowColor = `#00${colorHex}${colorHex}`; // Shades of cyan/grey
-
-        shadowString += `${offsetX.toFixed(2)}vw ${offsetY.toFixed(
-          2
-        )}vw 0px ${shadowColor}`;
-        if (i < layers) {
-          shadowString += ", ";
+          currentAsciiElement.style.filter = `drop-shadow(${offsetX.toFixed(
+            2
+          )}vw ${offsetY.toFixed(2)}vw 0px ${shadowColor})`;
+          currentAsciiElement.style.textShadow = "none"; // Ensure text-shadow is off
+        } else {
+          // Non-Android: Use multi-layer text-shadow
+          const layers = 10;
+          let shadowString = "";
+          for (let i = 1; i <= layers; i++) {
+            const layerProgress = i / layers;
+            const offsetX = -normalizedX * maxOffset * layerProgress;
+            const offsetY = maxOffset * layerProgress;
+            const colorIntensity = Math.round(180 - 180 * layerProgress);
+            const colorHex = colorIntensity.toString(16).padStart(2, "0");
+            const shadowColor = `#00${colorHex}${colorHex}`;
+            shadowString += `${offsetX.toFixed(2)}vw ${offsetY.toFixed(
+              2
+            )}vw 0px ${shadowColor}`;
+            if (i < layers) {
+              shadowString += ", ";
+            }
+          }
+          currentAsciiElement.style.textShadow = shadowString;
+          currentAsciiElement.style.filter = "none"; // Ensure filter is off
         }
+
+        animationFrameIdRef.current = requestAnimationFrame(animateEffect);
+      };
+      animationFrameIdRef.current = requestAnimationFrame(animateEffect);
+    }
+
+    // Cleanup function
+    return () => {
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+        animationFrameIdRef.current = null;
       }
-
-      // Apply the calculated shadow
-      asciiElement.style.textShadow = shadowString;
-
-      // Continue the loop
-      animationFrameIdRef.current = requestAnimationFrame(animateShadow);
+      // Reset both properties on cleanup
+      if (currentAsciiElement) {
+        currentAsciiElement.style.textShadow = "none";
+        currentAsciiElement.style.filter = "none";
+      }
     };
+  }, [isAndroid, displayContent]); // Rerun if OS or content changes
 
-    // Start the animation loop
-    animationFrameIdRef.current = requestAnimationFrame(animateShadow);
-  } else {
-    // If music stops or component unmounts, cancel the animation
-    if (animationFrameIdRef.current) {
-      cancelAnimationFrame(animationFrameIdRef.current);
-      animationFrameIdRef.current = null;
-    }
-    // Optionally reset the shadow when not animating
-    if (asciiElement) {
-      asciiElement.style.textShadow = "none"; // Or reset to a default static shadow
-    }
-  }
+  const preStyle: React.CSSProperties = {
+    whiteSpace: "pre",
+    margin: 0,
+    lineHeight: "1.1em",
+    letterSpacing: "normal",
+    display: "block",
+    color: "#00cccc",
+    background: "transparent",
+  };
 
   return (
     <div className="logo-container animate">
-      {/* Add refs to the elements */}
-      <div className="logo-mover" ref={moverRef}>
-        <pre className="logo-ascii" ref={asciiRef}>
-          {asciiArt}
+      <div
+        className="logo-mover"
+        ref={moverRef}
+        style={{ position: "relative" }}
+      >
+        <pre className="logo-ascii" ref={asciiRef} style={preStyle}>
+          {displayContent}
         </pre>
       </div>
     </div>

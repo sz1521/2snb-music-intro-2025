@@ -36,11 +36,7 @@
   line-height: 1.1;
   color: #00ffff; /* Base cyan color */
 
-  /* --- Background --- */
-  background-color: rgba(0, 0, 0, 0.5);
-
   padding: 10px;
-  border-radius: 5px;
   text-align: left;
   white-space: pre; /* Preserve whitespace in the logo string */
 
@@ -66,13 +62,13 @@
   animation:
     /* Initial stretch runs from 1s to 9s */ initial-stretch 8s
       ease-out 1s 1 forwards,
-    /* Stretch during move runs from 10s to 15s */ stretch-during-move 5s
+    /* Stretch during move runs from 9s to 14s */ stretch-during-move 5s
       ease-in-out 9s 1 forwards,
-    /* Repeating stretch starts at 15s */ stretch-letters 16s ease-in-out 14s
-      infinite;
+    /* Repeating stretch starts later, e.g., at 15s */ stretch-letters 16s
+      ease-in-out 15s infinite; /* Increased delay from 14s to 15s */
 
   /* Optimize animations */
-  will-change: text-shadow, letter-spacing;
+  will-change: text-shadow, letter-spacing, filter; /* Added filter */
 }
 
 /* --- Keyframes --- */
@@ -84,7 +80,7 @@
     transform: translate(-50%, -50%);
   }
   100% {
-    top: 10vh;
+    top: 12vh;
     transform: translate(-50%, 0);
   }
 }
@@ -149,5 +145,21 @@
   80%,
   100% {
     letter-spacing: normal;
+  }
+}
+
+/* Media Query for Mobile Portrait */
+@media screen and (orientation: portrait) {
+  /* Redefine the animation for mobile portrait */
+  @keyframes move-logo-up {
+    0% {
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      /* Use a smaller value for mobile portrait */
+      top: 5vh;
+      transform: translate(-50%, 0);
+    }
   }
 }

@@ -47,9 +47,9 @@
   background-repeat: repeat-x;
 
   /* Apply horizontal scroll (constant speed approx) AND vertical copper effect */
-  /* Halve the duration to double the speed */
-  animation: scroll-left-const-speed 60s linear infinite,
-    /* Halved duration from 100s */ copper-scroll 2s linear infinite alternate;
+  /* Increase the duration to slow down the scroll */
+  animation: scroll-left-const-speed 45s linear infinite,
+    /* e.g., doubled from 60s */ copper-scroll 2s linear infinite alternate;
   will-change: transform, background-position;
   transform: translateZ(0); /* Promote layer */
 }
@@ -68,8 +68,9 @@
     transform: translateX(0%);
   }
   100% {
-    /* Keep the distance, speed is controlled by duration */
-    transform: translateX(-15000px);
+    /* Translate left by its own width (100%) plus the viewport width (100vw) */
+    /* This ensures it scrolls completely off screen regardless of text length */
+    transform: translateX(calc(-100% - 100vw));
   }
 }
 
@@ -94,5 +95,30 @@
   }
   100% {
     background-position-y: 100%;
+  }
+}
+
+/* --- Media Queries --- */
+
+/* Media Query for Mobile Portrait */
+@media screen and (orientation: portrait) {
+  /* Adjust scroller container position */
+  .scroller-container {
+    /* Move scroller lower on mobile portrait - Decrease value further */
+    bottom: -1vh; /* Decreased from 5vh, try 0vh or 1vh if needed */
+  }
+
+  /* Redefine the jump animation for mobile portrait */
+  @keyframes amiga-jump {
+    0% {
+      transform: translateY(0vh);
+    }
+    50% {
+      /* Reduce the jump height on mobile portrait */
+      transform: translateY(-6vh); /* Reduced from -12vh */
+    }
+    100% {
+      transform: translateY(0vh);
+    }
   }
 }
