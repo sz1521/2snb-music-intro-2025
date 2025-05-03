@@ -3,7 +3,7 @@ import "./Scroller.css";
 
 const Scroller: React.FC = () => {
   const scrollText =
-    "+++ 2 SPACE & BEYOND presents: Music intro 2025 !!! +++                   +++ Design, sfx and gfx by sz1 --- Code by AI (Gemini 2.5 Pro) --- Amiga topaz font by P.H. Lauke +++                   +++ Greetings to my family, all my friend and colleagues!!! +++                   +++ (C) 2025, 2 SPACE & BEYOND. +++";
+    "+++ 2 SPACE & BEYOND presents: Music intro 2025 !!! +++                   +++ Design, sfx and gfx by sz1 --- Code by AI (Gemini 2.5 Pro) --- Amiga topaz font by P.H. Lauke +++                   +++ Greetings to my family, all my friends and colleagues plus people from the old demoscene !!! +++                   +++ (C) 2025, 2 SPACE & BEYOND. +++";
 
   return (
     <div className="scroller-container">
